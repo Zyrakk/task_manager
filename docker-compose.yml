@@ -1,0 +1,23 @@
+name: task-api-stack
+
+services:
+  task-api:
+    build: .
+    container_name: task-api
+    environment:
+      - PORT=3000
+      - DATA_FILE=/data/tasks.json
+      - NODE_ENV=production
+    volumes:
+      - ./data:/data
+    expose:
+      - "3000"
+    networks:
+      nginx-proxy:
+        aliases:
+          - task-api
+    restart: unless-stopped
+
+networks:
+  nginx-proxy:
+    external: true
