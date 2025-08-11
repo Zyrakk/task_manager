@@ -33,6 +33,7 @@ function sanitize(list) {
         end: t.end || null,
         c1: String(t.c1 || "#00f6a9"),
         c2: String(t.c2 || "#00a7ff"),
+        focused: !!t.focused,
         createdAt: t.createdAt || now(),
         updatedAt: now()
       };
