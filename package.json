@@ -5,6 +5,7 @@
   "type": "module",
   "dependencies": {
     "express": "^4.19.2",
+    "express-session": "^1.18.0",
     "ws": "^8.18.0"
   }
 }
