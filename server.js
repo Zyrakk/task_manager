@@ -144,25 +144,10 @@ function broadcast(payload) {
 }
 
 // Página de login
-app.get("/", (req, res) => {
+app.get("/login", (req, res) => {
   if (req.session && req.session.authenticated) {
-    res.send(`
-      <!DOCTYPE html>
-      <html lang="es">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Task Manager - Sesión activa</title>
-      </head>
-      <body>
-        <h1>Sesión activa</h1>
-        <p>Usuario: ${req.session.username}</p>
-        <form action="/logout" method="POST">
-          <button type="submit">Cerrar sesión</button>
-        </form>
-      </body>
-      </html>
-    `);
+    // Si ya está autenticado, redirigir a la app
+    res.redirect("/");
   } else {
     res.send(`
       <!DOCTYPE html>
@@ -170,7 +155,7 @@ app.get("/", (req, res) => {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Task Manager - Login</title>
+        <title>Z - Tasks - Login</title>
         <style>
           body {
             font-family: Arial, sans-serif;
@@ -218,17 +203,19 @@ app.get("/", (req, res) => {
             color: red;
             font-size: 14px;
             margin-top: 10px;
+            text-align: center;
           }
         </style>
       </head>
       <body>
         <div class="login-box">
-          <h1>Task Manager</h1>
+          <h1>Z - Tasks</h1>
           <form action="/login" method="POST">
-            <input type="text" name="username" placeholder="Usuario" required>
+            <input type="text" name="username" placeholder="Usuario" required autofocus>
             <input type="password" name="password" placeholder="Contraseña" required>
             <button type="submit">Iniciar sesión</button>
           </form>
+          ${req.query.error ? '<div class="error">Usuario o contraseña incorrectos</div>' : ''}
         </div>
       </body>
       </html>
@@ -245,28 +232,14 @@ app.post("/login", (req, res) => {
     req.session.username = username;
     res.redirect("/");
   } else {
-    res.send(`
-      <!DOCTYPE html>
-      <html lang="es">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Login Error</title>
-      </head>
-      <body>
-        <h1>Error de autenticación</h1>
-        <p>Usuario o contraseña incorrectos</p>
-        <a href="/">Volver a intentar</a>
-      </body>
-      </html>
-    `);
+    res.redirect("/login?error=1");
   }
 });
 
 // Logout
 app.post("/logout", (req, res) => {
   req.session.destroy();
-  res.redirect("/");
+  res.redirect("/login");
 });
 
 // Verificar estado de autenticación
