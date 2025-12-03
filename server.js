@@ -250,13 +250,15 @@ app.get("/api/auth/status", (req, res) => {
   });
 });
 
-// RUTAS PROTEGIDAS
-app.get("/api/tasks", requireAuth, (req, res) => {
+// API: GET público (viewer), POST/PUT/DELETE requieren auth
+app.get("/api/tasks", (req, res) => {
+  // GET es público - cualquiera puede ver las tareas
   res.set("Cache-Control", "no-store");
   res.json({ version, tasks });
 });
 
 app.post("/api/save", requireAuth, (req, res) => {
+  // POST requiere autenticación - solo admin puede modificar
   const body = req.body || {};
   if (!Array.isArray(body.tasks)) {
     return res.status(400).json({ error: "Invalid tasks payload" });
